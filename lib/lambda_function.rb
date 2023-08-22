@@ -23,7 +23,8 @@ def lambda_handler(event:, context:)
         "type" => "object",
         "properties" => {
           "email" => { "type" => "string", "description" => "User's email address" },
-          "phone" => { "type" => "string", "description" => "User's phone number" }
+          "phone" => { "type" => "string", "description" => "User's phone number" },
+          "name" => { "type" => "string", "description" => "User's name" }
         }
       }
     }
