@@ -81,7 +81,10 @@ def forget(args)
 end
 
 def extract_email_content(event)
-  'Subject: ' + event['Records'][0]['Ses']['Mail']['commonHeaders']['subject']
-  + "\n\n" +
-  event['Records'][0]['Ses']['Mail']['commonHeaders']['body']
+  (
+    'Subject: ' +
+      event['Records'][0]['Ses']['Mail']['commonHeaders']['subject'] +
+    "\n\n" +
+    event['Records'][0]['Ses']['Mail']['commonHeaders']['body']
+  )
 end

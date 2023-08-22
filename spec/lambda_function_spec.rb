@@ -17,11 +17,15 @@ describe 'LambdaFunction' do
                     'from' => ['sender@example.com'],
                     'to' => ['contact@yourdomain.com'],
                     'subject' => 'Forget Me Request',
-                    'body' => <<-EMAIL
-Dear Privacy Team,
-...
-Email: janedoe@example.com
-...
+                    'body' => <<~EMAIL
+                      Dear Privacy Team,
+                      I’m asking several companies to delete the data they hold on me. To make this easy for me to manage, and in line with the ICO guidance, please don’t ask me to perform a self service process or fill out a form.
+                      I would like to exercise my right of erasure under data protection law. If there’s any information that can’t be deleted for regulatory reasons please confirm what needs to be retained and minimise what you can. (Eg. Marketing and third party data processing).
+                      To help find my account in your records, my details are:
+                      Name: Jane Joe
+                      Email: janedoe@example.com
+                      Please send email confirmation once the process has been completed and if you need any more information, please let me know.
+                      Thank you in advance.
                     EMAIL
                   }
                 }
