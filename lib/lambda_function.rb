@@ -12,6 +12,7 @@ def lambda_handler(event:, context:)
 
   # Construct the message for OpenAI with function signature
   messages = [
+    { "role" => "system", "content" => "You are a virtual assistant tasked with identifying and processing 'forget-me' requests from emails. Determine if the email content contains such a request and if so, call the 'forget' function with the appropriate arguments." },
     { "role" => "user", "content" => email_content }
   ]
   functions = [
@@ -36,7 +37,13 @@ def lambda_handler(event:, context:)
   request.body = {
     model: "gpt-3.5-turbo-0613",
     messages: messages,
-    functions: functions
+    functions: functions,
+    temperature: 0.2,
+    top_p: 0.5,
+    max_tokens: 150, # Adjust as needed
+    frequency_penalty: 0.5,
+    presence_penalty: 0.0,
+    n: 3 # Request 3 completions
   }.to_json
 
   $logger.info("Calling OpenAI with request:\n" +
@@ -50,13 +57,21 @@ def lambda_handler(event:, context:)
   $logger.info("Received response from OpenAI:\n" +
     JSON.pretty_generate(response_body))
 
-  function_call = response_body['choices'][0]['message']['function_call']
+  # Check if any of the choices call the forget function
+  if response_body['choices'].any? {|choice|
+      choice.dig('message', 'function_call', 'name') == 'forget'
+    }
 
-  # Check if the forget function was called and extract arguments
-  if function_call && function_call['name'] == 'forget'
+    # Call the forget function with the arguments from the first
+    # one that does call the function.
+    function_call = response_body['choices'].find {|choice|
+      choice.dig('message', 'function_call', 'name') == 'forget'
+    }['message']['function_call']
+
     args = JSON.parse(function_call['arguments'])
+
     forget(args)
-  end
+  end    
 
   { statusCode: 200, body: 'Processed' }
 end
