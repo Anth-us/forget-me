@@ -18,8 +18,8 @@ This component is built entirely with serverless AWS technology,
 2. **Lambda Activation**: SES triggers a **Lambda function** with the email data.
 3. **OpenAI Query**: The Lambda constructs a query, including a "forget" function, and sends it to **OpenAI's Chat API**.
 4. **Decision Making**: OpenAI determines if the email is a valid "forget-me" request and, if so, how to call the "forget" function.
-5. **Data Processing**: Based on OpenAI's decision, the Lambda executes the "forget" function, which handles the necessary data masking or removal.
-6. **Response**: Lambda sends a completion status back to SES.
+5. **Data Processing**: Based on OpenAI's decision, the Lambda executes the "forget" function, which handles the necessary data masking or removal. (Out of scope of this example project.)
+6. **Response**: Lambda could send a completion status back to SES.<br/>(It doesn't do this yet.)
 
 For a visual representation of this process, see the sequence diagram below:
 
