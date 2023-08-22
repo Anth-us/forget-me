@@ -39,15 +39,16 @@ def lambda_handler(event:, context:)
     functions: functions
   }.to_json
 
-  $logger.info("Calling OpenAI with request: #{JSON.pretty_generate(request.body)}")
+  $logger.info("Calling OpenAI with request:\n" +
+    JSON.pretty_generate(JSON.parse(request.body)))
 
   response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
     http.request(request)
   end
 
   response_body = JSON.parse(response.body)
-
-  $logger.info("Received response from OpenAI: #{JSON.pretty_generate(response_body)}")
+  $logger.info("Received response from OpenAI:\n" +
+    JSON.pretty_generate(response_body))
 
   function_call = response_body['choices'][0]['message']['function_call']
 
@@ -65,7 +66,6 @@ def forget(args)
 end
 
 def extract_email_content(event)
-  # Extracting the email content from the event
   'Subject: ' + event['Records'][0]['Ses']['Mail']['commonHeaders']['subject']
   + "\n\n" +
   event['Records'][0]['Ses']['Mail']['commonHeaders']['body']
