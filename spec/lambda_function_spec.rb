@@ -7,7 +7,7 @@ describe 'LambdaFunction' do
     let(:context) { {} } # Mock AWS Lambda context object if needed
 
     context 'when the email is a forget-me request' do
-      let(:event) do
+      let(:event1) do
         {
           'Records' => [
             {
@@ -35,10 +35,57 @@ describe 'LambdaFunction' do
         }
       end
 
+      let(:event2) do
+        {
+          'Records' => [
+            {
+              'Ses' => {
+                'Mail' => {
+                  'commonHeaders' => {
+                    'from' => ['janedoe@example.com'],
+                    'to' => ['contact@yourdomain.com'],
+                    'subject' => 'Forget Me Request',
+                    'body' => <<~EMAIL
+                      Hi Company (Company),
+
+                      I'm Jane Doe, and I previously used your service. I'm requesting that you erase all the personal data you hold about me.
+                      
+                      In my previous interactions with your organization, I shared some of my personal data with you. I received an email that indicates you hold personal data about me, on 2014 December 26.
+                      
+                      I’m using Mine - a data privacy app - to discover services that hold my data and reduce my online exposure. I used Mine's technology to send this request from my own inbox.
+                      
+                      My personal information is as follows: 
+                      
+                      Name: Jane Doe
+                      
+                      Email: janedoe@example.com
+                      
+                      For Companies: 
+                      Thank you for helping our user. We understand that each company has its own DSR handling process, and we will be happy to adjust to yours. Visit this page (https://api.saymine.com/dsr1?existing=False&category=&experiment=True&actionId=PBGXZM7N&utm_source=product&utm_medium=email&utm_campaign=dsr-form1&utm_content=venuedriver.com) for more info.
+                      
+                      Thanks, 
+                      Jane Doe
+                      
+                      Request ID: XYZXYZXYZ
+                    EMAIL
+                  }
+                }
+              }
+            }
+          ]
+        }
+      end
+
       it 'calls the forget function with the contact email' do
         expect_any_instance_of(Object).to receive(:forget).
           with({ "email" => "janedoe@example.com", "name"=>"Jane Doe" })
-        lambda_handler(event: event, context: context)
+        lambda_handler(event: event1, context: context)
+      end
+
+      it 'calls the forget function with the contact email (different content)' do
+        expect_any_instance_of(Object).to receive(:forget).
+          with({ "email" => "janedoe@example.com", "name"=>"Jane Doe", "ID"=>"XYZXYZXYZ" })
+        lambda_handler(event: event2, context: context)
       end
     end
 
