@@ -44,7 +44,7 @@ describe 'LambdaFunction' do
                   'commonHeaders' => {
                     'from' => ['janedoe@example.com'],
                     'to' => ['contact@yourdomain.com'],
-                    'subject' => 'Forget Me Request',
+                    'subject' => 'Venuedriver data erasure request - from Jane Doe - request: XYZXYZXYZ',
                     'body' => <<~EMAIL
                       Hi Company (Company),
 
